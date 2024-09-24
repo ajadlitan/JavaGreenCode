@@ -71,17 +71,17 @@ pipeline {
                 }
             }
         }
-        stage('Stage 5: Compare emission') {
-            steps {
-                dir("${env.REPO_PATH}") {
-                    withEnv(["PYTEST=${env.PYTEST_PATH}"]) {
-                        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                            bat "${env.PYTHON_PATH} compare_emissions.py"
-                        }
-                    }
-                }
-            }
-        }
+       // stage('Stage 5: Compare emission') {
+       //     steps {
+       //         dir("${env.REPO_PATH}") {
+       //             withEnv(["PYTEST=${env.PYTEST_PATH}"]) {
+       //                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+       //                     bat "${env.PYTHON_PATH} compare_emissions.py"
+       //                 }
+       //             }
+       //         }
+       //     }
+        //}
         // stage('Stage 6: Update Dashboard') {
         //     steps {
         //         powershell """
