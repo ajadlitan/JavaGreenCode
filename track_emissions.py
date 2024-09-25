@@ -314,6 +314,14 @@ def compare_emissions():
     # Merge dataframes on common columns
     merged_df = emissions_df.merge(emissions_after_df, on=["Application name", "File Type"], suffixes=('_before', '_after'))
 
+    # Calculate the difference in emissions and determine the result
+    merged_df['final emission'] = merged_df['Emissions (gCO2eq)_before'] - merged_df['Emissions (gCO2eq)_after']
+    merged_df['Result'] = merged_df['final emission'].apply(lambda x: 'Improved' if x > 0 else 'Need improvement')
+
+    # Select and rename columns
+    result_df = merged_df[["Application name", "File Type", "Timestamp_before", "Timestamp_after", "Emissions (gCO2eq)_before", "Emissions (gCO2eq)_after", "final emission", "Result"]]
+    result_df.columns = ["Application name", "File Type", "Timestamp (Before)", "Timestamp (After)", "Before", "After", "Final Emission", "Result"]
+
     # Calculate the total emissions for the 'Before' and 'After'
     total_emissions_before = merged_df["Emissions (gCO2eq)_before"].sum()
     total_emissions_after = merged_df["Emissions (gCO2eq)_after"].sum()
@@ -323,6 +331,14 @@ def compare_emissions():
     last_run_timestamp = merged_df['Timestamp_after'].iloc[0]
     last_run_data = merged_df[merged_df['Timestamp_after'] == last_run_timestamp]
     last_run_emissions = last_run_data['Emissions (gCO2eq)_after'].sum()
+
+    # Create 'Result' folder if it doesn't exist
+    if not os.path.exists(RESULT_DIR):
+        os.makedirs(RESULT_DIR)
+
+    # Write to new CSV file
+    result_file_path = os.path.join(RESULT_DIR, "comparison_results.csv")
+    result_df.to_csv(result_file_path, index=False)
 
     # Call the PDF generation function
     generate_pdf_report(merged_df, total_emissions_before, total_emissions_after, last_run_emissions, RESULT_DIR)
