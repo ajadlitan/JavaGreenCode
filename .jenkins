@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
     
@@ -6,17 +5,16 @@ pipeline {
 	    PROJECT_NAME = "Sample Application"
 		REPO_PATH = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\GreenTechNavigator@2"
 		PYTHON_PATH = "C:\\Users\\debas\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-		PYTEST_PATH = "C:\\Users\\debas\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python312\\Scripts\\pytest.exe"
+		PYTEST_PATH = "C:\\Users\\debas\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pytest.exe"
 		PATH = "C:\\Users\\debas\\Downloads\\apache-maven-3.9.8-bin\\apache-maven-3.9.8\\bin\\;$PATH"
-		//SHAREPOINT_PS_SCRIPT_PATH = 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\GreenTechNavigator@2\\upload_to_sharepoint.ps1'
-    }
+	}
     
     stages {
         stage('Stage 1: Clone Repository') {
             steps {
                 echo "Project Name: ${env.PROJECT_NAME}"
                 ws("${env.REPO_PATH}") {
-                    git branch: 'main', credentialsId: '0dad2f61-1db3-456c-928e-74a70713cde0', url: 'https://github.com/ajadlitan/GreenTechNavigator.git'
+                    git branch: 'main', credentialsId: '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', url: 'https://github.com/ajadlitan/GreenTechNavigator.git'
                 }
             }
         }
@@ -38,29 +36,8 @@ pipeline {
                 }
             }
         }
-     //   stage('Stage 3: Green Code Refiner') {
-     //       steps {
-     //           dir("${env.REPO_PATH}") {
-     //               catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-     //                   script {
-     //                       def result = ''
-     //                       while (true) {
-     //                          result = bat(script: "${env.PYTHON_PATH} GreenCodeRefiner.py", returnStdout: true).trim()
-     //                           if (result.contains('Script-Has-Uploaded-All-Files')) {
-     //                               break
-     //                           } else if (result.contains('Script-Has-Remain-Some-Files-To-Uploaded')) {
-     //                               echo "Rerunning GreenCodeRefiner.py due to pending tasks..."
-     //                           } else {
-     //                               error "Unexpected result from GreenCodeRefiner.py: ${result}"
-     //                           }
-     //                       }
-     //                   }
-     //               }
-     //           }
-     //       }
-     //   }
-
-        stage('Stage 4: Dynamic Code Analysis') {
+     
+        stage('Stage 4: Dynamic Code Analysis & Report Generate') {
             steps {
                 dir("${env.REPO_PATH}") {
                     withEnv(["PYTEST=${env.PYTEST_PATH}"]) {
@@ -71,23 +48,6 @@ pipeline {
                 }
             }
         }
-       // stage('Stage 5: Compare emission') {
-       //     steps {
-       //         dir("${env.REPO_PATH}") {
-       //             withEnv(["PYTEST=${env.PYTEST_PATH}"]) {
-       //                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-       //                     bat "${env.PYTHON_PATH} compare_emissions.py"
-       //                 }
-       //             }
-       //         }
-       //     }
-        //}
-        // stage('Stage 6: Update Dashboard') {
-        //     steps {
-        //         powershell """
-        //         & '${env.SHAREPOINT_PS_SCRIPT_PATH}'
-        //         """
-        //     }
-        // }
+        
     }
 }
