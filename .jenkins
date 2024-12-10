@@ -14,7 +14,7 @@ pipeline {
             steps {
                 echo "Project Name: ${env.PROJECT_NAME}"
                 ws("${env.REPO_PATH}") {
-                    git branch: 'main', credentialsId: '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', url: 'https://github.com/ajadlitan/JavaGreenCode.git'
+                    git branch: 'main', credentialsId: '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', url: 'https://github.com/ajadlitan/JavaGreenCode.git'
                 }
             }
         }
